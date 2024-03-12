@@ -5,11 +5,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import "../styles/AuthStyles.css";
 import { useAuth } from "../context/auth.js";
+import fetchData from './../api.js'; // Import fetchData from api.js
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,12 +39,27 @@ const Login = () => {
       toast.error("Something went wrong");
     }
   };
+
+  // Use fetchData function
+  const fetchDataFromAPI = async () => {
+    try {
+      const data = await fetchData();
+      console.log('Fetched data:', data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  // Call fetchData function when component mounts
+  useEffect(() => {
+    fetchDataFromAPI();
+  }, []);
+
   return (
     <Layout title="Register - Ecommer App">
       <div className="form-container " style={{ minHeight: "90vh" }}>
         <form onSubmit={handleSubmit}>
           <h4 className="title">LOGIN FORM</h4>
-
           <div className="mb-3">
             <input
               type="email"
@@ -78,7 +94,6 @@ const Login = () => {
               Forgot Password
             </button>
           </div>
-
           <button type="submit" className="btn btn-primary">
             LOGIN
           </button>
