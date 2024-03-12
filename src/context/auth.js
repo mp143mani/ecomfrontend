@@ -6,10 +6,11 @@ const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     user: null,
     token: "",
+    backendUrl: "https://eccomerce-s49e.onrender.com" // Your backend URL
   });
 
-  //default axios
-  axios.defaults.headers.common["Authorization"] = auth?.token;
+  // Set default axios baseURL to backend URL
+  axios.defaults.baseURL = auth.backendUrl;
 
   useEffect(() => {
     const data = localStorage.getItem("auth");
@@ -23,6 +24,12 @@ const AuthProvider = ({ children }) => {
     }
     //eslint-disable-next-line
   }, []);
+
+  // Update axios headers when auth token changes
+  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] = auth.token;
+  }, [auth.token]);
+
   return (
     <AuthContext.Provider value={[auth, setAuth]}>
       {children}
